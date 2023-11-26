@@ -14,6 +14,7 @@ namespace ToDo_App.Models
 
         [BindProperty]
         [Required(ErrorMessage = "Please enter a due date.")]
+       
         public DateTime? DueDate { get; set; }
 
         [BindProperty]
