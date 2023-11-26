@@ -1,2 +1,10 @@
 # ToDo_App
  ![Снимок экрана 2023-11-26 232442](https://github.com/Dragon2000v/ToDo_App_NET8/assets/58611837/5b3dc317-492b-4b9c-9f4e-a41a1951f7f2)
+![Снимок экрана 2023-11-26 232643](https://github.com/Dragon2000v/ToDo_App_NET8/assets/58611837/e52b40e8-a82e-440b-96c4-4fd4b062eba5)
+![Снимок экрана 2023-11-26 232608](https://github.com/Dragon2000v/ToDo_App_NET8/assets/58611837/54477455-f53a-44b7-8b5f-3c2da043ca4e)
+![Снимок экрана 2023-11-26 232955](https://github.com/Dragon2000v/ToDo_App_NET8/assets/58611837/9282088c-dbc6-44e8-8fc7-7f3d8eda5fcb)
+![Снимок экрана 2023-11-26 232928](https://github.com/Dragon2000v/ToDo_App_NET8/assets/58611837/a749bd96-658e-4926-ae33-19594c447edc)
+![Снимок экрана 2023-11-26 232848](https://github.com/Dragon2000v/ToDo_App_NET8/assets/58611837/92be577e-7da3-43ae-85cf-efc35da1d4f0)
+![Снимок экрана 2023-11-26 232814](https://github.com/Dragon2000v/ToDo_App_NET8/assets/58611837/231ad1e1-fcc7-4d50-b717-8b71fc1d15ad)
+![Снимок экрана 2023-11-26 232749](https://github.com/Dragon2000v/ToDo_App_NET8/assets/58611837/08b851f3-ed77-478b-bf91-42cf148c0def)
+![Снимок экрана 2023-11-26 232705](https://github.com/Dragon2000v/ToDo_App_NET8/assets/58611837/557736c7-89b5-4460-bdb0-afaa6f71d335)
