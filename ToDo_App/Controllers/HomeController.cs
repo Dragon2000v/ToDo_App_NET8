@@ -90,12 +90,12 @@ namespace ToDo_App.Controllers
         [HttpGet]
         public IActionResult Update(int id)
         {
-            // Получаем задачу из базы данных по заданному идентификатору
+            
             var задача = context.ToDos.Find(id);
 
             if (задача == null)
             {
-                return NotFound(); // Или обрабатываем случай, когда задача не найдена
+                return NotFound(); 
             }
 
             ViewBag.Categories = context.Categories.ToList();
@@ -105,23 +105,21 @@ namespace ToDo_App.Controllers
         }
 
         [HttpPost]
-        public IActionResult Update(ToDo обновленнаяЗадача)
+        public IActionResult Update(ToDo updatedTask)
         {
             if (ModelState.IsValid)
             {
-                // Обновляем существующую задачу в базе данных
-                var существующаяЗадача = context.ToDos.Find(обновленнаяЗадача.Id);
+                var existingTask = context.ToDos.Find(updatedTask.Id);
 
-                if (существующаяЗадача == null)
+                if (existingTask == null)
                 {
-                    return NotFound(); // Или обрабатываем случай, когда задача не найдена
+                    return NotFound();
                 }
 
-                // Обновляем свойства задачи значениями из обновленной задачи
-                существующаяЗадача.Description = обновленнаяЗадача.Description;
-                существующаяЗадача.CategoryId = обновленнаяЗадача.CategoryId;
-                существующаяЗадача.DueDate = обновленнаяЗадача.DueDate;
-                существующаяЗадача.StatusId = обновленнаяЗадача.StatusId;
+                existingTask.Description = updatedTask.Description;
+                existingTask.CategoryId = updatedTask.CategoryId;
+                existingTask.DueDate = updatedTask.DueDate;
+                existingTask.StatusId = updatedTask.StatusId;
 
                 context.SaveChanges();
 
@@ -129,10 +127,9 @@ namespace ToDo_App.Controllers
             }
             else
             {
-                // Если проверка модели не прошла, перезагружаем представление с ошибками проверки
                 ViewBag.Categories = context.Categories.ToList();
                 ViewBag.Statuses = context.Statuses.ToList();
-                return View(обновленнаяЗадача);
+                return View(updatedTask);
             }
         }
 
