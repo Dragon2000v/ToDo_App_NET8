@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 using ToDo_App.Models;
 
@@ -6,27 +7,164 @@ namespace ToDo_App.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private ToDoContext context;
+        public HomeController(ToDoContext ctx) => context = ctx;
 
-        public HomeController(ILogger<HomeController> logger)
+
+
+        public IActionResult Index(string id)
         {
-            _logger = logger;
+            var filters = new Filters(id);
+            ViewBag.Filters = filters;
+
+            ViewBag.Categories = context.Categories.ToList();
+            ViewBag.Statuses = context.Statuses.ToList();
+            ViewBag.DueFilters = Filters.DueFilterValues;
+
+            IQueryable<ToDo> query = context.ToDos
+                .Include(t => t.Category)
+                .Include(t => t.Status);
+
+            if (filters.HasCategory)
+            {
+                query = query.Where(t => t.CategoryId == filters.CategoryId);
+
+            }
+
+            if (filters.HasStatus)
+            {
+                query = query.Where(t => t.StatusId == filters.StatusId);
+
+            }
+           
+            if (filters.HasDue)
+            {
+                var today = DateTime.Today;
+
+                if (filters.IsPast)
+                {
+                    query = query.Where(t => t.DueDate != null && t.DueDate.Value.Date < today);
+                }
+                else if (filters.IsFuture)
+                {
+                    query = query.Where(t => t.DueDate != null && t.DueDate.Value.Date > today);
+                }
+                else if (filters.IsToday)
+                {
+                    query = query.Where(t => t.DueDate != null && t.DueDate.Value.Date == today);
+                }
+            }
+
+
+
+            var tasks = query.OrderBy(t => t.DueDate).ToList();
+
+            return View(tasks);
         }
 
-        public IActionResult Index()
+        [HttpGet]
+        public IActionResult Add()
         {
-            return View();
+            ViewBag.Categories = context.Categories.ToList();
+            ViewBag.Statuses = context.Statuses.ToList();
+            var task = new ToDo { StatusId = "open" };
+            return View(task);
+        }
+        [HttpPost]
+        public IActionResult Add(ToDo task)
+        {
+            if (ModelState.IsValid)
+            {
+                context.ToDos.Add(task);
+                context.SaveChanges();
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                ViewBag.Categories = context.Categories.ToList();
+                ViewBag.Statuses = context.Statuses.ToList();
+                return View(task);
+            }
         }
 
-        public IActionResult Privacy()
+        [HttpGet]
+        public IActionResult Update(int id)
         {
-            return View();
+            // Получаем задачу из базы данных по заданному идентификатору
+            var задача = context.ToDos.Find(id);
+
+            if (задача == null)
+            {
+                return NotFound(); // Или обрабатываем случай, когда задача не найдена
+            }
+
+            ViewBag.Categories = context.Categories.ToList();
+            ViewBag.Statuses = context.Statuses.ToList();
+
+            return View(задача);
         }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
+        [HttpPost]
+        public IActionResult Update(ToDo обновленнаяЗадача)
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            if (ModelState.IsValid)
+            {
+                // Обновляем существующую задачу в базе данных
+                var существующаяЗадача = context.ToDos.Find(обновленнаяЗадача.Id);
+
+                if (существующаяЗадача == null)
+                {
+                    return NotFound(); // Или обрабатываем случай, когда задача не найдена
+                }
+
+                // Обновляем свойства задачи значениями из обновленной задачи
+                существующаяЗадача.Description = обновленнаяЗадача.Description;
+                существующаяЗадача.CategoryId = обновленнаяЗадача.CategoryId;
+                существующаяЗадача.DueDate = обновленнаяЗадача.DueDate;
+                существующаяЗадача.StatusId = обновленнаяЗадача.StatusId;
+
+                context.SaveChanges();
+
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                // Если проверка модели не прошла, перезагружаем представление с ошибками проверки
+                ViewBag.Categories = context.Categories.ToList();
+                ViewBag.Statuses = context.Statuses.ToList();
+                return View(обновленнаяЗадача);
+            }
+        }
+
+
+        [HttpPost]
+        public IActionResult Filter(string[] filter)
+        {
+            string id = string.Join("-", filter);
+            return RedirectToAction("Index", new { ID = id });
+        }
+        [HttpPost]
+        public IActionResult MarkComplete([FromRoute] string id, ToDo selected)
+        {
+            selected = context.ToDos.Find(selected.Id)!;
+            if (selected != null)
+            {
+                selected.StatusId = "closed";
+                context.SaveChanges();
+            }
+            return RedirectToAction("Index", new { ID = id });
+        }
+        [HttpPost]
+        public IActionResult DeleteComplete(string id)
+        {
+            var toDelete = context.ToDos.Where(t => t.StatusId == "closed").ToList();
+            foreach (var task in toDelete)
+            {
+                context.ToDos.Remove(task);
+            }
+            context.SaveChanges();
+
+            return RedirectToAction("Index", new { ID = id });
         }
     }
 }
