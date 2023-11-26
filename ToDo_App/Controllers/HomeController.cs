@@ -163,5 +163,22 @@ namespace ToDo_App.Controllers
 
             return RedirectToAction("Index", new { ID = id });
         }
+
+        [HttpPost]
+        public IActionResult Delete(int id)
+        {
+            var taskToDelete = context.ToDos.Find(id);
+
+            if (taskToDelete != null)
+            {
+                context.ToDos.Remove(taskToDelete);
+                context.SaveChanges();
+            }
+
+            return RedirectToAction("Index");
+        }
+
+
+
     }
 }

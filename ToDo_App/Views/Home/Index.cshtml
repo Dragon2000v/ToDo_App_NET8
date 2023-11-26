@@ -58,13 +58,15 @@
                                 <a asp-action="Update" asp-route-id="@task.Id" class="btn btn-primary btn-sm">
                                     Edit
                                 </a>
+                                
                                 @if (task.StatusId == "open")
                                 {
                                     <button type="submit" class="btn btn-primary btn-sm"
                                             name="@nameof(ToDo.Id)" value="@task.Id">
                                         Mark Completed
                                     </button>
-                                }
+                                }                              
+
                             </td>
                         </tr>
                     }

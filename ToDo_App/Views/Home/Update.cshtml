@@ -58,3 +58,11 @@
     </button>
     <a asp-action="Index" class="btn btn-primary">Cancel</a>
 </form>
+@if (Model.Id != 0)
+{
+    <form asp-action="Delete" method="post" onsubmit="return confirm('Are you sure you want to delete this task?');">
+        <input type="hidden" asp-for="Id" />
+        <hr />
+        <button type="submit" class="btn btn-danger">Delete</button>
+    </form>
+}
