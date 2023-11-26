@@ -361,3 +361,5 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/ToDo_App/Migrations/20231126200133_init.cs
+/ToDo_App/Migrations/20231126200133_init.Designer.cs
